@@ -17,8 +17,8 @@ Re <- Ra*100
 
 #---------------Obteniendo los momentos de las series
 #Maximo de Sharpe
-Pmaxme <- Mean.arithmetic(Ra$Maximo.de.Sharpe)
-Pmaxrisk <- StdDev(Ra$Maximo.de.Sharpe)
+Pmaxme <- Mean.arithmetic(Ra$Max_Sharpe)
+Pmaxrisk <- StdDev(Ra$Max_Sharpe)
 
 #Benchmark
 PBme<- Mean.arithmetic(Ra$IPC)
@@ -26,38 +26,38 @@ PBrisk <- StdDev(Ra$IPC)
 
 
 #Min varaianza
-Pmime<- Mean.arithmetic(Ra$Minima.Varianza)
-Pmirisk <- StdDev(Ra$Minima.Varianza)
+Pmime<- Mean.arithmetic(Ra$Min_Var)
+Pmirisk <- StdDev(Ra$Min_Var)
 
 #-------Analisis Exploratorio Maximo sharpe----------------#
 par(mfrow=c(1,3))
-hist(Ra$Maximo.de.Sharpe, ylab="Frecuencia",xlab = "Rendimientos", main = "Histograma", col = "gray")
-plot(density(Ra$Maximo.de.Sharpe), lwd=3, col="red",xlab="Rendimientos", main = "Densidad de Kernel")
-qqnorm(Ra$Maximo.de.Sharpe, xlab="Cuantiles Te髍icos", ylab="Cuantiles muestrales", main = "QQPlot Normal vs Muestral" )
-qqline(Ra$Maximo.de.Sharpe)
+hist(Re$Max_Sharpe, ylab="Frecuencia",xlab = "Rendimientos", main = "Histograma", col = "gray")
+plot(density(Re$Max_Sharpe), lwd=3, col="red",xlab="Rendimientos", main = "Densidad de Kernel")
+qqnorm(Re$Max_Sharpe, xlab="Cuantiles Te贸ricos", ylab="Cuantiles muestrales", main = "QQPlot Normal vs Muestral" )
+qqline(Re$Max_Sharpe)
 
 
 #-------Analisis Exploratorio Benchmark----------------------#
 par(mfrow=c(1,3))
 hist(Ra$IPC, ylab="Frecuencia",xlab = "Rendimientos", main = "Histograma", col = "gray")
 plot(density(Ra$IPC), lwd=3, col="red",xlab="Rendimientos", main = "Densidad de Kernel")
-qqnorm(Ra$IPC, xlab="Cuantiles Te髍icos", ylab="Cuantiles muestrales", main = "QQPlot Normal vs Muestral" )
+qqnorm(Ra$IPC, xlab="Cuantiles Te贸ricos", ylab="Cuantiles muestrales", main = "QQPlot Normal vs Muestral" )
 qqline(Ra$IPC)
 
 
 
 #--------Analisis exploratorio Minima Varianza
 par(mfrow=c(1,3))
-hist(Ra$Minima.Varianza, ylab="Frecuencia",xlab = "Rendimientos", main = "Histograma", col = "gray")
-plot(density(Ra$Minima.Varianza), lwd=3, col="red",xlab="Rendimientos", main = "Densidad de Kernel")
-qqnorm(Ra$Minima.Varianza, xlab="Cuantiles Te髍icos", ylab="Cuantiles muestrales", main = "QQPlot Normal vs Muestral" )
-qqline(Ra$Minima.Varianza)
+hist(Ra$Min_Var, ylab="Frecuencia",xlab = "Rendimientos", main = "Histograma", col = "gray")
+plot(density(Ra$Min_Var), lwd=3, col="red",xlab="Rendimientos", main = "Densidad de Kernel")
+qqnorm(Ra$Min_Var, xlab="Cuantiles Te贸ricos", ylab="Cuantiles muestrales", main = "QQPlot Normal vs Muestral" )
+qqline(Ra$Min_Var)
 
 
-#----------------------Prueba distribuci髇 -------------------#
-fit.cont(data2fit=Re$Maximo.de.Sharpe)
+#----------------------Prueba distribuci贸n -------------------#
+fit.cont(data2fit=Re$Max_Sharpe)
 fit.cont(Re$IPC)
-fit.cont(Re$Minima.Varianza)
+fit.cont(Re$Min_Var)
 
 
 #----------Simulando numeros con distribucion logistica
@@ -85,72 +85,72 @@ RsimuladoN_b <- qnorm(p,PBme,PBrisk)
 #-----------Comparacion de distribuciones
 #Portafolio maximo de Sharpe
 par(mfrow=c(1,3))
-chart.Histogram(RsimuladoN_M, main = "Distribuci髇 Normal", col="blue")
-chart.Histogram(RsimuladoL_M, main ="Distribuci髇 Logistica", col="green")
-chart.Histogram(Ra$Maximo.de.Sharpe, main = "Distribuci髇 Muestral", col="yellow")
+chart.Histogram(RsimuladoN_M, main = "Distribuci贸n Normal", col="blue")
+chart.Histogram(RsimuladoL_M, main ="Distribuci贸n Logistica", col="green")
+chart.Histogram(Ra$Max_Sharpe, main = "Distribuci贸n Muestral", col="yellow")
 
 #Portafolio minima varinza
 par(mfrow=c(1,3))
-chart.Histogram(RsimuladoN_m, main = "Distribuci髇 Normal", col="blue")
-chart.Histogram(RsimuladoL_m, main ="Distribuci髇 Logistica", col="green")
-chart.Histogram(Ra$Minima.Varianza, main = "Distribuci髇 Muestral", col="red")
+chart.Histogram(RsimuladoN_m, main = "Distribuci贸n Normal", col="blue")
+chart.Histogram(RsimuladoL_m, main ="Distribuci贸n Logistica", col="green")
+chart.Histogram(Ra$Min_Var, main = "Distribuci贸n Muestral", col="red")
 
 #Benchmark
 par(mfrow=c(1,3))
-chart.Histogram(RsimuladoN_b, main = "Distribuci髇 Normal", col="blue")
-chart.Histogram(RsimuladoL_b, main ="Distribuci髇 Logistica", col="green")
-chart.Histogram(Ra$IPC, main = "Distribuci髇 Muestral", col="orange")
+chart.Histogram(RsimuladoN_b, main = "Distribuci贸n Normal", col="blue")
+chart.Histogram(RsimuladoL_b, main ="Distribuci贸n Logistica", col="green")
+chart.Histogram(Ra$IPC, main = "Distribuci贸n Muestral", col="orange")
 
 
-#VAR Monte Carlo Distribuci髇 normal
+#VAR Monte Carlo Distribuci贸n normal
 NVARMonteCarlo_M <- VaR(RsimuladoN_M, p=0.95,method = "gaussian") #Maximo Sharpe
 NVARMonteCarlo_m <- VaR(RsimuladoN_m, p=0.95,method = "gaussian") #Minima Varianza
 NVARMonteCarlo_b <- VaR(RsimuladoN_b, p=0.95,method = "gaussian") #Benchmark
 
-#VAR Monte Carlo Distribuci髇 logistica
+#VAR Monte Carlo Distribuci贸n logistica
 LVARMonteCarlo_M <- VaR(RsimuladoL_M, p=0.95,method = "modified") #Maximo Sharpe
 LVARMonteCarlo_m <- VaR(RsimuladoL_m, p=0.95,method = "modified") #Minima varianza
 LVARMonteCarlo_b <- VaR(RsimuladoL_b, p=0.95,method = "modified") #Benchmark
 
-#Expected shortfall Monte Carlo Distribuci髇 normal
+#Expected shortfall Monte Carlo Distribuci贸n normal
 NES_M <- ES(R=RsimuladoN_M,p=0.95, method = "gaussian") #Maximo de Sharpe
 NES_m <- ES(R=RsimuladoN_m,p=0.95, method = "gaussian") #Minima Varianza
 NES_b <- ES(R=RsimuladoN_b,p=0.95, method = "gaussian") #Benchmark
 
 
-#Expected shortfall Monte Carlo Distribuci髇 Logistica
+#Expected shortfall Monte Carlo Distribuci贸n Logistica
 LES_M <- ES(R=RsimuladoL_M,p=0.95, method = "modified") #Maximo de Sharpe
 LES_m <- ES(R=RsimuladoL_m,p=0.95, method = "modified") #Minima Varianza
 LES_b <- ES(R=RsimuladoL_b,p=0.95, method = "modified") #Benchmark
 
 #VAR Historico
-VARH_M <- VaR(R=Ra$Maximo.de.Sharpe, p=0.95, method = "historical") #Maximo de Sharpe
-VARH_m <- VaR(R=Ra$Minima.Varianza, p=0.95, method = "historical") #Minima Varianza
+VARH_M <- VaR(R=Ra$Max_Sharpe, p=0.95, method = "historical") #Maximo de Sharpe
+VARH_m <- VaR(R=Ra$Min_Var, p=0.95, method = "historical") #Minima Varianza
 VARH_b <- VaR(R=Ra$IPC, p=0.95, method = "historical") #Benchmark
 
-#VAR Modificado ajustado a su distribuci髇 muestral
-VARM_M <- VaR(R=Ra$Maximo.de.Sharpe, p=0.95, method = "modified") #Maximo de Sharpe
-VARM_m <- VaR(R=Ra$Minima.Varianza, p=0.95, method = "modified") #Minima Varianza
+#VAR Modificado ajustado a su distribuci贸n muestral
+VARM_M <- VaR(R=Ra$Max_Sharpe, p=0.95, method = "modified") #Maximo de Sharpe
+VARM_m <- VaR(R=Ra$Min_Var, p=0.95, method = "modified") #Minima Varianza
 VARM_b <- VaR(R=Ra$IPC, p=0.95, method = "modified") #Benchmark
 
 #VAR Gaussiano
-VARG_M <- VaR(R=Ra$Maximo.de.Sharpe, p=0.95, method = "gaussian") #Maximo de Sharpe
-VARG_m <- VaR(R=Ra$Minima.Varianza, p=0.95, method = "gaussian") #Minima Varianza
+VARG_M <- VaR(R=Ra$Max_Sharpe, p=0.95, method = "gaussian") #Maximo de Sharpe
+VARG_m <- VaR(R=Ra$Min_Var, p=0.95, method = "gaussian") #Minima Varianza
 VARG_b <- VaR(R=Ra$IPC, p=0.95, method = "gaussian") #Benchmark
 
 #Expected shortfall Historico
-ESH_M <- ES(R=Ra$Maximo.de.Sharpe,p=0.95, method = "historical") #Maximo de Sharpe
-ESH_m <- ES(R=Ra$Minima.Varianza,p=0.95, method = "historical") #Minima Varianza
+ESH_M <- ES(R=Ra$Max_Sharpe,p=0.95, method = "historical") #Maximo de Sharpe
+ESH_m <- ES(R=Ra$Min_Var,p=0.95, method = "historical") #Minima Varianza
 ESH_b <- ES(R=Ra$IPC,p=0.95, method = "historical") #Benchmark
 
-#Expected shortfall modificado ajustado a su distribuci髇 muestral
-ESM_M <- ES(R=Ra$Maximo.de.Sharpe,p=0.95, method = "modified") #Maximo de Sharpe
-ESM_m <- ES(R=Ra$Minima.Varianza,p=0.95, method = "modified") #Minima Varianza
+#Expected shortfall modificado ajustado a su distribuci贸n muestral
+ESM_M <- ES(R=Ra$Max_Sharpe,p=0.95, method = "modified") #Maximo de Sharpe
+ESM_m <- ES(R=Ra$Min_Var,p=0.95, method = "modified") #Minima Varianza
 ESM_b <- ES(R=Ra$IPC,p=0.95, method = "modified") #Benchmark
 
 #Expected shortfall Gaussiano
-ESG_M <- ES(R=Ra$Maximo.de.Sharpe,p=0.95, method = "gaussian") #Maximo de Sharpe
-ESG_m <- ES(R=Ra$Minima.Varianza,p=0.95, method = "gaussian") #Minima Varianza
+ESG_M <- ES(R=Ra$Max_Sharpe,p=0.95, method = "gaussian") #Maximo de Sharpe
+ESG_m <- ES(R=Ra$Min_Var,p=0.95, method = "gaussian") #Minima Varianza
 ESG_b <- ES(R=Ra$IPC,p=0.95, method = "gaussian") #Benchmark
 
 
@@ -170,7 +170,7 @@ B.VARs <- data.frame(cbind(VARG_b,VARH_b,VARM_b, NVARMonteCarlo_b, LVARMonteCarl
 colnames(B.VARs) <- c("Gaussiano", "Historico", "Ajustado", "Monte Carlo Normal", "Monte Carlo Logistico" )
 row.names(B.VARs) <- c("Benchmark")
 
-#Agrupaci髇 VAR
+#Agrupaci贸n VAR
 ALL.VAR <- data.frame(rbind(Max.VARs, Min.VARs, B.VARs))*100
 
 
@@ -191,11 +191,13 @@ colnames(B.ES) <- c("Gaussiano", "Historico", "Ajustado", "Monte Carlo Normal", 
 row.names(B.ES) <- c("Benchmark")
 
 
-#Agrupaci髇 ES
+#Agrupaci贸n ES
 ALL.ES <- data.frame(rbind(Max.ES, Min.ES, B.ES))*100
 
 ALL.VAR
 
 ALL.ES
+
+
 
 
