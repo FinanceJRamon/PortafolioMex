@@ -91,7 +91,7 @@ op_reb <- optimize.portfolio.rebalancing(portfolioRetornos,
                                          training_period = 36, 
                                          rolling_window = 12) 
 
-# Visualizaci�n los portafolios rebalanceados {pesos din�micos}
+# Visualización los portafolios rebalanceados {pesos dinámicos}
 x11()
 chart.Weights(op_reb, main="Pesos Rebalanceados en el tiempo")
 
@@ -116,25 +116,25 @@ Dinamico<- Return.portfolio(portfolioRetornos,Podin)
 
 # Grafico Capture Ratio
 
-desempe�o <- cbind(Maximo_Sharpe, Min_Varianza, Dinamico)
-colnames(desempe�o) <- c("Max_Sharpe", "Min_Varianza", "Dinamico")
+desempeño <- cbind(Maximo_Sharpe, Min_Varianza, Dinamico)
+colnames(desempeño) <- c("Max_Sharpe", "Min_Varianza", "Dinamico")
 x11()
-chart.CaptureRatios(Ra=desempe�o, Rb=RIPC)
+chart.CaptureRatios(Ra=desempeño, Rb=RIPC)
 
-table.CaptureRatios(Ra=desempe�o, Rb=RIPC, digits=4)
+table.CaptureRatios(Ra=desempeño, Rb=RIPC, digits=4)
 
 #Rendimientos
 x11()
-chart.Boxplot(desempe�o, main="Distribuci�n de los Rendimientos de los portafolios")
+chart.Boxplot(desempeño, main="Distribución de los Rendimientos de los portafolios")
 
 
 #Graficando Renndimiento acumulado vs Benchmark
-desempe�o_1 <- cbind(Maximo_Sharpe, Min_Varianza, Dinamico,RIPC)
+desempeño_1 <- cbind(Maximo_Sharpe, Min_Varianza, Dinamico,RIPC)
 x11()
-charts.PerformanceSummary(desempe�o_1, main = "Desempe�o en el tiempo", legend.loc = "center" )
+charts.PerformanceSummary(desempeño_1, main = "Desempeño en el tiempo", legend.loc = "center" )
 
 #Performance
-table.CAPM(Ra=desempe�o, Rb=RIPC)
+table.CAPM(Ra=desempeño, Rb=RIPC)
 
 #Exportando a excel las ponderaciones
 ponder <- data.frame(Pomax, Pomin)
@@ -147,8 +147,22 @@ colnames(ponDi) <- c("Dinamico")
 write.csv(ponDi, file = "Ponde_Dina.csv")
 
 #Exportar rendimientos a excel
-Ra <- data.frame(desempe�o_1)
-colnames(Ra) <- c("Max_Sharpe", "Min_Var", "Dinamico", "IPC")
+desempeño_2 <- cbind(Maximo_Sharpe, Min_Varianza,RIPC)
+colnames(desempeño_2) <- c("Max_Sharpe","Min_Varianza","IPC")
+Ra <- data.frame(desempeño_2)
+colnames(Ra) <- c("Max_Sharpe", "Min_Var", "IPC")
 write.csv(Ra, file = "Rendimientos.csv")
 
+#***********VAR vs ES diario**************************#
 
+#Maximo Sharpe
+x11()
+chart.BarVaR(Maximo_Sharpe, methods=c("ModifiedVaR","ModifiedES"), p=0.95, colorset = 1:12, main="VaR vs ES del Portafolio Maximo de Sharpe")
+
+#Min Varianza
+x11()
+chart.BarVaR(Min_Varianza, methods=c("ModifiedVaR","ModifiedES"), p=0.95, colorset = 1:12, main="VaR vs ES del Portafolio Minima Varianza")
+
+#Benchmark
+x11()
+chart.BarVaR(RIPC, methods=c("ModifiedVaR","ModifiedES"), p=0.95, colorset = 1:12, main="VaR vs ES del Benchmark")
