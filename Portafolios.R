@@ -7,7 +7,6 @@ library(ROI.plugin.quadprog)
 library(ROI)
 library(ggplot2)
 
-
 #Creando vector de empresas 
 tickers <- c("LABB.MX", "LIVEPOLC-1.MX",	"PE&OLES.MX",	"CEMEXCPO.MX",	"OMAB.MX",	"IENOVA.MX",	"ORBIA.MX",
              "GRUMAB.MX",	"KIMBERA.MX",	"BIMBOA.MX",	"RA.MX",	"GMEXICOB.MX",	"GFNORTEO.MX", "GCARSOA1.MX",
@@ -18,7 +17,7 @@ tickers <- c("LABB.MX", "LIVEPOLC-1.MX",	"PE&OLES.MX",	"CEMEXCPO.MX",	"OMAB.MX",
 inicio <- "2010-01-01"
 fin="2020-04-30"
 #Tasa Libre de riesgo diaria
-rfr= (0.05/252)
+rfr= (0.05/360)
 
 #Calculando Rendimientos: Diarios
 portfolioPrecios <- NULL
@@ -63,7 +62,7 @@ eficientes <- extractEfficientFrontier(maxSR.lo.ROI,match.col = "StdDev", n.port
 
 x11()
 chart.EfficientFrontier(eficientes, match.col = "StdDev", n.portfolios = 200, rf=rfr, tangent.line = TRUE, 
-                          labels.assets = TRUE, chart.assets = TRUE)
+                        labels.assets = TRUE, chart.assets = TRUE)
 
 #Extrayendo ponderaciones de los portafolios
 Pomin <- extractWeights(minvar.lo.ROI)
@@ -80,6 +79,7 @@ chart.Weights(maxSR.lo.ROI)
 #Portafolio dinamico
 
 # Portafolios aleatorios
+set.seed(123)
 pa <- random_portfolios(init.portf.maxsharpe, 10000, "sample") #genera 10000 portafolios
 
 # Rebalanceo
@@ -111,7 +111,7 @@ RIPC <- na.omit(periodReturn(IPC,period='daily',type='arithmetic'))
 Maximo_Sharpe <- Return.portfolio(portfolioRetornos,Pomax)
 
 Min_Varianza <- Return.portfolio(portfolioRetornos,Pomin)
-                                 
+
 Dinamico<- Return.portfolio(portfolioRetornos,Podin)
 
 # Grafico Capture Ratio
@@ -121,7 +121,6 @@ colnames(desempeño) <- c("Max_Sharpe", "Min_Varianza", "Dinamico")
 x11()
 chart.CaptureRatios(Ra=desempeño, Rb=RIPC)
 
-table.CaptureRatios(Ra=desempeño, Rb=RIPC, digits=4)
 
 #Rendimientos
 x11()
@@ -130,11 +129,13 @@ chart.Boxplot(desempeño, main="Distribución de los Rendimientos de los portafo
 
 #Graficando Renndimiento acumulado vs Benchmark
 desempeño_1 <- cbind(Maximo_Sharpe, Min_Varianza, Dinamico,RIPC)
+colnames(desempeño_1) <- c("Max_Sharpe", "Min_Varianza", "Dinamico", "IPC")
 x11()
 charts.PerformanceSummary(desempeño_1, main = "Desempeño en el tiempo", legend.loc = "center" )
 
 #Performance
-table.CAPM(Ra=desempeño, Rb=RIPC)
+table.CAPM(Ra=desempeño, Rb=RIPC, Rf=rfr)
+SharpeRatio(R=desempeño, Rf=rfr, p=.95)
 
 #Exportando a excel las ponderaciones
 ponder <- data.frame(Pomax, Pomin)
@@ -143,7 +144,7 @@ write.csv(ponder, file = "Ponderaciones.csv")
 
 #Exportar a excel resultados de ponderaciones dinamica
 ponDi <- data.frame(Podin)
-colnames(ponDi) <- c("Dinamico")
+colnames(ponDi) <- tickers
 write.csv(ponDi, file = "Ponde_Dina.csv")
 
 #Exportar rendimientos a excel
@@ -166,3 +167,4 @@ chart.BarVaR(Min_Varianza, methods=c("ModifiedVaR","ModifiedES"), p=0.95, colors
 #Benchmark
 x11()
 chart.BarVaR(RIPC, methods=c("ModifiedVaR","ModifiedES"), p=0.95, colorset = 1:12, main="VaR vs ES del Benchmark")
+
